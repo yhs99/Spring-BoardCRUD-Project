@@ -29,3 +29,20 @@ CREATE TABLE `yhs`.`member` (
     ON DELETE SET NULL
     ON UPDATE NO ACTION)
 COMMENT = '계층형게시판';
+
+CREATE TABLE `sky`.`pointdef` (
+  `pointWhy` VARCHAR(20) NOT NULL,
+  `pointScore` INT NULL,
+  PRIMARY KEY (`pointWhy`))
+COMMENT = '유저에게 적립할 포인트에 대한 정책 정의 테이블\n어떤 사유로 몇 포인트를 지급하는지에 대해 정의';
+
+select * from member;
+select * from board;
+INSERT INTO MEMBER VALUES("imfirst",sha1(md5("first1234")), "희성", "010-9936-8901", "khb113322@gmail.com", now(), "avatar.png", 100);
+INSERT INTO MEMBER VALUES("imsecond",sha1(md5("second1234")), "토성", "010-9936-8902", "second@naver.com", now(), "avatar.png", 100);
+INSERT INTO board(title, content, writer)
+VALUES ('1빠', '냉무', 'imfirst');
+INSERT INTO board(title, content, writer)
+VALUES ('2빠요', '냉무요', 'imsecond');
+delete from member where userId = 'imfirst';
+commit;

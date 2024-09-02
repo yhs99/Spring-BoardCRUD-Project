@@ -31,7 +31,7 @@
         <a class="nav-link active" href="/">메인</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">게시판</a>
+        <a class="nav-link" href="/board">게시판</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Link</a>

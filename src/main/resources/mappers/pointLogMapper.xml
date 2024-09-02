@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mini.mappers.pointLogMapper">
+	<insert id="insertPointLog">
+		insert into pointlog(pointWho, pointWhy, pointScore)
+		SELECT m.userId, p.pointWhy, p.pointScore
+		FROM member m, pointdef p
+		WHERE m.userId = #{pointWho}
+		AND p.pointWhy = #{pointWhy}
+	</insert>
+	
+	<update id="updateMemberPoint">
+		UPDATE member
+		SET userPoint = userPoint + (SELECT pointScore FROM pointdef where pointWhy = #{pointWhy})
+		WHERE userId = #{pointWho}
+	</update>
+</mapper>

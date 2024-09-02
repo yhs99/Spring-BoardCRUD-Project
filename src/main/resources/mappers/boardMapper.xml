@@ -6,4 +6,9 @@
 		FROM board
 		ORDER BY boardNo DESC
 	</select>
+	
+	<insert id="saveNewBoard">
+		INSERT INTO board(title, content, writer)
+		VALUES(#{title}, #{content}, #{writer})
+	</insert>
 </mapper>

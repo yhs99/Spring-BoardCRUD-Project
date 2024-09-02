@@ -1,38 +1,58 @@
 package com.mini.project.board.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mini.project.board.domain.BoardDTO;
 import com.mini.project.board.domain.BoardVO;
 import com.mini.project.board.service.BoardService;
+import com.mini.project.infra.ApiResponse;
+import com.mini.project.infra.ApiResponseUtil;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 
-@Log4j
 @RestController
 @RequestMapping("api")
+@Slf4j
 public class BoardController<T> {
 
 	@Inject
 	private BoardService service;
 	/**
-	 * @return ResponseEntity<List<BoardVO>>
+	 * @return ResponseEntity<ApiResponse<List<BoardVO>>>
 	 */
 	@GetMapping("board")
-	public ResponseEntity<Map<String, List<BoardVO>>> boardList(){
-		Map<String, List<BoardVO>> map = new HashMap<>();
-		map.put("data", service.getAllBoards());
-		System.out.println(map.get("data"));
-		return ResponseEntity.ok().body(map);
+	public ResponseEntity<ApiResponse<?>> boardList(){
+		log.info("boardList call");
+		try {
+			return ResponseEntity.ok().body(ApiResponseUtil.success(service.getAllBoards()));
+		}catch(Exception e) {
+			return ResponseEntity.badRequest().body(ApiResponseUtil.error("문제가 발생해 데이터를 불러오지 못했습니다."));
+		}
+	}
+	@PostMapping("board")
+	public ResponseEntity<ApiResponse<?>> saveBoard(BoardDTO subject) {
+		try {
+			boolean success = service.saveBoard(subject);
+			log.info("작성 성공여부 : " + success);
+			if(success) {
+				return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseUtil.success(""));
+			}else {
+				return ResponseEntity.status(HttpStatus.OK).body(ApiResponseUtil.error("작성 실패"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseUtil.error("오류가 발생했습니다."));
+		}
 	}
 	
 	/**

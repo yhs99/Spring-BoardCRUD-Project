@@ -2,8 +2,10 @@ package com.mini.project.board.service;
 
 import java.util.List;
 
+import com.mini.project.board.domain.BoardDTO;
 import com.mini.project.board.domain.BoardVO;
 
 public interface BoardService {
-	List<BoardVO> getAllBoards();
+	List<BoardVO> getAllBoards() throws Exception;
+	boolean saveBoard(BoardDTO subject) throws Exception;
 }

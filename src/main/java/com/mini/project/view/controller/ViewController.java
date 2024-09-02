@@ -18,7 +18,13 @@ public class ViewController {
 	
 	@GetMapping("board")
 	public String boardLists() {
-		logger.info("index call");
+		logger.info("boardLists Controller call");
 		return "board/board";
+	}
+	
+	@GetMapping("boardForm")
+	public String boardForm() {
+		logger.info("boardForm URL call");
+		return "board/boardForm";
 	}
 }

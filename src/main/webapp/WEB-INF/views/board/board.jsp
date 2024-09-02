@@ -7,9 +7,9 @@
 	<title>게시판</title>
   <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script>
-	$(function() {
+	window.onload = function() {
 		getBoardData();
-	});
+	}
 
 	function getBoardData() {
 		$.ajax({ 
@@ -23,12 +23,17 @@
 				renderTable(response.data);
 			},
 			error: function(e) {
-				console.log(e);
+				let eMessage = JSON.parse(e.responseText);
+			    $('#modal-body').html(eMessage.message);
+			    let modal = new bootstrap.Modal(document.getElementById('myModal'))
+			    modal.show();;
 			}
 		});
 	}
 	function renderTable(datas) {
 		let output = "";
+		let now = new Date();
+	    const twoH = 2 * 60 * 60 * 1000;
 		if(datas.length > 0) {
 			output += `<table class="table table-striped">
 							<thead>
@@ -43,11 +48,15 @@
 							<tbody>`;
 			$.each(datas, function(index, item) {
 				let create_at = new Date(item.postDate);
+				let twoHourLater = now-create_at;
 				output += `<tr>
 					<td>\${item.boardNo}</td>
-					<td>\${item.title}</td>
+					<td>\${item.title}`;
+				if(twoH >= twoHourLater)
+					output+= ` <span class="badge bg-warning text-dark">NEW</span>`;
+				output += `</td>
 					<td>\${item.writer}</td>
-					<td>\${create_at.getFullYear()}년 \${create_at.getMonth()+1}월 \${create_at.getDate()}일 \${create_at.getHours()}-\${create_at.getMinutes()}</td>
+					<td>\${create_at.getFullYear()}. \${create_at.getMonth()+1}. \${create_at.getDate()} \${create_at.getHours()}:\${create_at.getMinutes()}</td>
 					<td>\${item.readCount}</td>
 				</tr>`;
 			})
@@ -61,8 +70,32 @@
 <body>
 	<jsp:include page="../header.jsp"/>
 	<div class="container">
-		<div class="table-container pt-5">
+		<button class="btn btn-primary mt-3 mb-3" onclick="window.location='./boardForm'">글 작성</button>
+		<div class="table-container">
 		</div>
+	</div>
+	
+	<div class="modal" id="myModal">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	
+	      <!-- Modal Header -->
+	      <div class="modal-header">
+	        <h4 class="modal-title">에러발생</h4>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+	      </div>
+	
+	      <!-- Modal body -->
+	      <div class="modal-body" id="modal-body">
+	      </div>
+	
+	      <!-- Modal footer -->
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">닫기</button>
+	      </div>
+	
+	    </div>
+	  </div>
 	</div>
 	<jsp:include page="../footer.jsp"/>
 </body>
