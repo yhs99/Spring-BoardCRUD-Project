@@ -24,4 +24,9 @@
 	<context:component-scan base-package="com.mini.project.member.controller" />
 	<context:component-scan base-package="com.mini.project.board.controller" />
 	<context:component-scan base-package="com.mini.project.view.controller" />
+
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	<beans:property name="maxUploadSize" value="10485670"></beans:property>
+	</beans:bean>
 </beans:beans>
