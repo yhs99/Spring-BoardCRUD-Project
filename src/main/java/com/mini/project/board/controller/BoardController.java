@@ -1,6 +1,7 @@
 package com.mini.project.board.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -64,12 +65,13 @@ public class BoardController<T> {
 	@PostMapping("upfile")
 	public ResponseEntity<ApiResponse<?>> saveBoardFile(@RequestParam(value = "file") MultipartFile file, HttpServletRequest req) {
 		log.info("파일 전송 요청됨");
+		String path = "";
 		try {
-			fileSave(file, req);			
+			path = fileSave(file, req);			
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
-		return ResponseEntity.ok().body(ApiResponseUtil.success(""));
+		return ResponseEntity.ok().body(ApiResponseUtil.success(path));
 	}
 	
 	/**
@@ -83,12 +85,13 @@ public class BoardController<T> {
 		return ResponseEntity.noContent().build();
 	}
 	
-	private void fileSave(MultipartFile file, HttpServletRequest req) throws IOException{
+	private String fileSave(MultipartFile file, HttpServletRequest req) throws IOException{
 		String originalFileName = file.getOriginalFilename();
 		long fileSize = file.getSize();
 		String contentType = file.getContentType();
 		byte[] upfile = file.getBytes();
+		InputStream is = file.getInputStream();
 		String realPath = req.getSession().getServletContext().getRealPath("./resources/boardUpFiles");
-		fileProcess.saveFileToRealPath(upfile, realPath, contentType, originalFileName, fileSize);
+		return fileProcess.saveFileToRealPath(upfile, realPath, contentType, originalFileName, fileSize, is);
 	}
 }

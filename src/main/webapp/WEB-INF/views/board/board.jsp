@@ -49,7 +49,7 @@
 			$.each(datas, function(index, item) {
 				let create_at = new Date(item.postDate);
 				let twoHourLater = now-create_at;
-				output += `<tr>
+				output += `<tr onclick="window.location='/board/\${item.boardNo}'">
 					<td>\${item.boardNo}</td>
 					<td>\${item.title}`;
 				if(twoH >= twoHourLater)

@@ -66,11 +66,17 @@ function validBoard() {
 }
 
 // 이미지 파일이면 미리보기하여 출력
-function showPreview(file) {
+function showPreview(file, path) {
+	console.log(path);
+	let show = ``;
 	let imageType = ["image/jpeg", "image/png", "image/gif"];
 	if(imageType.includes(file.type)) {
-		console.log(file.type);
+		show += `<p><image src='../../resources/boardUpFiles/2024/09/05/thumb_\${file.name}'>\${file.name}</p>`;
+	}else {
+		show += `<p>${file.name}</p>`;
 	}
+	$('#preview').html(show);
+	
 }
 
 function fileUpload(file) {
@@ -84,7 +90,7 @@ function fileUpload(file) {
 		data: fd,
 		dataType: "json",
 		success: function(data) {
-			
+			showPreview(file, data.data);
 		},
 		error: function(e) {
 			console.log(e);
@@ -112,8 +118,7 @@ function fileUpload(file) {
 			  <div class="fileUpload mb-3">
 			  	<p>업로드할 파일을 드래그하세요</p>
 			  </div>
-			  <div class="preview">
-			  	<p></p>
+			  <div class="preview" id="preview">
 			  </div>
 			  <button type="submit" id="submit" class="btn btn-primary">작성하기</button>
 			</form>

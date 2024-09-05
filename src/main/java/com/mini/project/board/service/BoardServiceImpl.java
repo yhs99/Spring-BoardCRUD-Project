@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mini.project.board.domain.BoardDTO;
+import com.mini.project.board.domain.BoardUpFilesVODTO;
 import com.mini.project.board.domain.BoardVO;
 import com.mini.project.board.persistance.BoardDAO;
 import com.mini.project.member.domain.PointLogDTO;
@@ -42,6 +43,16 @@ public class BoardServiceImpl implements BoardService{
 		if(result > 0 && r2 > 0 && r3 > 0)
 			return true;
 		else return false;
+	}
+
+	@Override
+	public BoardVO getBoardByBoardNo(int id) throws Exception {
+		return dao.selectBoard(id);
+	}
+
+	@Override
+	public List<BoardUpFilesVODTO> getBoardUpFiles(int id) throws Exception {
+		return dao.selectBoardUpFiles(id);
 	}
 	
 }

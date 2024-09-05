@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.mini.project.board.domain.BoardDTO;
+import com.mini.project.board.domain.BoardUpFilesVODTO;
 import com.mini.project.board.domain.BoardVO;
 
 @Repository
@@ -26,5 +27,15 @@ public class BoardDAOImpl implements BoardDAO{
 	@Override
 	public int insertBoard(BoardDTO subject) throws Exception {
 		return session.insert(NS + "saveNewBoard", subject);
+	}
+
+	@Override
+	public BoardVO selectBoard(int id) throws Exception {
+		return session.selectOne(NS + "selectBoardByBoardId", id);
+	}
+
+	@Override
+	public List<BoardUpFilesVODTO> selectBoardUpFiles(int id) throws Exception {
+		return session.selectList(NS+"selectBoardUpFiles", id);
 	}
 }

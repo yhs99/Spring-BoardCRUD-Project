@@ -4,18 +4,25 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.imgscalr.Scalr;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FileProcess {
 	
-	public void saveFileToRealPath(byte[] upfile, String realPath, String contentType, String originalFileName, long fileSize) {
+	final int TARGET_IMAGE_WIDTH = 60;
+	final int TARGET_IMAGE_HEIGHT = 60;
+	
+	
+	public String saveFileToRealPath(byte[] upfile, String realPath, String contentType, String originalFileName, long fileSize, InputStream is) {
 		String[] ymd = makeCalendarPath(realPath);
 		String saveFilePath = realPath + ymd[ymd.length-1];
 		String newFileName = null;
@@ -25,20 +32,36 @@ public class FileProcess {
 		}else {
 			newFileName = originalFileName;
 		}
-		System.out.println(newFileName.split("\\.")[1]);
-		saveFile(upfile, saveFilePath, newFileName.split("\\.")[1], newFileName);
+		saveFile(upfile, saveFilePath, newFileName.split("\\.")[1], newFileName, is);
+		return saveFilePath;
 	}
 	
-	private void saveFile(byte[] upfile, String saveFilePath, String ext, String newFileName) {
+	private void saveFile(byte[] upfile, String saveFilePath, String ext, String newFileName, InputStream is) {
 		try {
+			File output = new File(saveFilePath+File.separator+newFileName);
+			File resize_output = new File(saveFilePath+File.separator+"thumb_"+newFileName);
+			if(ext.equals("jpeg") | ext.equals("png") | ext.equals("gif")) {
+				saveResizeImage(ext, is, resize_output);
+			}
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(upfile);
 			BufferedImage image = ImageIO.read(inputStream);
-			File output = new File(saveFilePath+File.separator+newFileName);
 			ImageIO.write(image, ext, output);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	private void saveResizeImage(String ext, InputStream is, File output) throws IOException{
+		BufferedImage bi = ImageIO.read(is);
+	    bi = resizeImages(bi, TARGET_IMAGE_WIDTH, TARGET_IMAGE_HEIGHT);
+	    ImageIO.write(bi, ext, output);
+		System.out.println("image resizing..");
+	}
+
+	private static BufferedImage resizeImages(BufferedImage originalImage, int width, int height) {
+	    return Scalr.resize(originalImage, width, height);
+	}
+
 
 	private String renameFileName(String originalFileName) {
 		String uuid = UUID.randomUUID().toString();

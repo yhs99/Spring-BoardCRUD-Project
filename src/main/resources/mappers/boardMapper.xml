@@ -11,4 +11,21 @@
 		INSERT INTO board(title, content, writer)
 		VALUES(#{title}, #{content}, #{writer})
 	</insert>
+	
+	<select id="selectBoardByBoardId" resultType="com.mini.project.board.domain.BoardVO">
+		SELECT *
+		FROM board
+		WHERE boardNo = #{id}
+	</select>
+	
+	<insert id="saveUpFile">
+		insert into boardupfiles(newFileName, originFileName, thumbFileName, ext, size, boardNo, base64Img)
+		values(#{newFileName}, #{originFileName}, #{thumbFileName}, #{ext}, #{size}, #{boardNo}, #{base64Img})
+	</insert>
+	
+	<select id="selectBoardUpFiles" resultType="com.mini.project.board.domain.BoardUpFilesVODTO">
+		SELECT boardFileNo, originFileName, thumbFileName, ext, size, boardNo, base64Img
+		FROM boardupfiles
+		WHERE boardNo = #{id}
+	</select>
 </mapper>
