@@ -52,6 +52,20 @@ CREATE TABLE `yhs`.`boardupfiles` (
     ON DELETE CASCADE
     ON UPDATE NO ACTION);
 
+CREATE TABLE `yhs`.`boardreadlog` (
+  `boardReadLogNo` INT NOT NULL AUTO_INCREMENT,
+  `who` VARCHAR(130) NOT NULL,
+  `when` DATETIME NOT NULL DEFAULT now(),
+  `boardNo` INT NULL,
+  PRIMARY KEY (`boardReadLogNo`),
+  INDEX `boardReadLog_boardNo_fk_idx` (`boardNo` ASC) VISIBLE,
+  CONSTRAINT `boardReadLog_boardNo_fk`
+    FOREIGN KEY (`boardNo`)
+    REFERENCES `yhs`.`board` (`boardNo`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
+
+
 select * from member;
 select * from board;
 select * from pointdef;
@@ -76,3 +90,19 @@ AND p.pointWhy = '회원가입';
 UPDATE member
 SET userPoint = userPoint + (SELECT pointScore FROM pointdef where pointWhy = '글작성')
 WHERE userId = 'imfirst';
+insert into boardupfiles(boardNo, originFileName)
+values(1, '몰라.png');
+commit;
+SELECT b.*, f.*, m.email
+FROM board b LEFT OUTER JOIN boardupfiles f
+ON b.boardNo = f.boardNo
+inner JOIN member m
+ON b.writer = m.userId
+WHERE b.boardNo = 1;
+SELECT readWhen
+FROM boardreadlog;
+SELECT IFNULL(datediff(now(), (
+	SELECT readwhen 
+    FROM boardreadlog 
+    WHERE readwho = '127.0.0.1'
+    AND boardNo = 21)), -1);

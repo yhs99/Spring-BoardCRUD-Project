@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import com.mini.project.board.domain.BoardDTO;
 import com.mini.project.board.domain.BoardUpFilesVODTO;
 import com.mini.project.board.service.BoardService;
+import com.mini.project.infra.GetClientIPAddr;
 
 @Controller
 public class ViewController {
@@ -49,10 +51,11 @@ public class ViewController {
 	}
 	
 	@GetMapping("board/{id}")
-	public String boardMain(@PathVariable("id") int id, Model model) {
+	public String boardMain(@PathVariable("id") int id, Model model, HttpServletRequest req) {
 		logger.info(id + "번 게시글 조회");
 		try {
-			model.addAttribute("board", service.getBoardByBoardNo(id));
+			logger.info(GetClientIPAddr.getClientIp(req) + " 조회");
+			model.addAttribute("board", service.getBoardByBoardNo(id, GetClientIPAddr.getClientIp(req)));
 			model.addAttribute("files", service.getBoardUpFiles(id));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -30,8 +30,11 @@
 		    <label for="content" class="form-label">내용:</label>
 			<textarea class="form-control" id="content" name="content" readonly>${board.content }</textarea>
 		  </div>
+		  <div class="mb-3">
+		    <label for="readCount" class="form-label">조회수:</label>
+		    <input type="text" class="form-control" id="readCount" name="readCount" value="${board.readCount}" readonly>
+		  </div> 
 		  <div class="preview" id="preview">
-		  	${files}
 		  </div>
 		  <button type="button" id="modify" class="btn btn-primary" onclick="modifyBoard();">수정</button>
 		  <button type="button" id="delete" class="btn btn-warning" onclick="deleteBoard();">삭제</button>

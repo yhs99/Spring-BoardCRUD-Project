@@ -1,6 +1,7 @@
 package com.mini.project.board.persistance;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -37,5 +38,25 @@ public class BoardDAOImpl implements BoardDAO{
 	@Override
 	public List<BoardUpFilesVODTO> selectBoardUpFiles(int id) throws Exception {
 		return session.selectList(NS+"selectBoardUpFiles", id);
+	}
+
+	@Override
+	public int selectReadLogByIdAndIp(Map<String, Object> data) {
+		return session.selectOne(NS+"selectReadLogByIdAndIp", data);
+	}
+
+	@Override
+	public int updateBoardReadCount(int id) throws Exception {
+		return session.update(NS+"updateBoardReadCount",id);
+	}
+
+	@Override
+	public int updateBoardReadWhen(Map<String, Object> data) throws Exception {
+		return session.update(NS+"updateBoardReadLog", data);
+	}
+
+	@Override
+	public int insertBoardReadLog(Map<String, Object> data) throws Exception {
+		return session.insert(NS+"insertBoardReadLog", data);
 	}
 }
