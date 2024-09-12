@@ -11,7 +11,6 @@ import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.imgscalr.Scalr;
 import org.springframework.stereotype.Component;
 

@@ -35,7 +35,7 @@
 		let now = new Date();
 	    const twoH = 2 * 60 * 60 * 1000;
 		if(datas.length > 0) {
-			output += `<table class="table table-striped">
+			output += `<table class="table table-striped table-hover">
 							<thead>
 								<tr>
 									<td>#</td>
@@ -49,9 +49,21 @@
 			$.each(datas, function(index, item) {
 				let create_at = new Date(item.postDate);
 				let twoHourLater = now-create_at;
-				output += `<tr onclick="window.location='/board/\${item.boardNo}'">
-					<td>\${item.boardNo}</td>
-					<td>\${item.title}`;
+				if(item.isDelete == 'Y') {
+					output += `<tr>`;
+				}else {
+					output += `<tr onclick="window.location='/board/\${item.boardNo}'" style='cursor:pointer;'>`
+				}
+					output+= `<td>\${item.boardNo}</td>
+					<td>`;
+				for(let i=0; i<item.step; i++) {
+					if(i==item.step-1) {
+						output += `&nbsp;ㄴ `;
+					}else {
+						output += `&nbsp;&nbsp;&nbsp;`;
+					}
+				}
+				output += `\${item.title}`;
 				if(twoH >= twoHourLater)
 					output+= ` <span class="badge bg-warning text-dark">NEW</span>`;
 				output += `</td>

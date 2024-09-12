@@ -17,4 +17,10 @@ public interface BoardDAO {
 	int insertBoardReadLog(Map<String, Object> data) throws Exception;
 	int updateBoardReadCount(int id) throws Exception;
 	int updateBoardReadWhen(Map<String, Object> data) throws Exception;
+	int checkReplyCnt(BoardDTO reply);
+	int updateBoardsRefOrder(int ref, int refOrder);
+	int addReply(BoardDTO reply);
+	int updateBoardRef();
+	int deleteIsDelete(int id);
+	int deleteUpFiles(int id);
 }

@@ -87,9 +87,12 @@ FROM member m, pointdef p
 WHERE m.userId = 'imfirst'
 AND p.pointWhy = '회원가입';
 
-UPDATE member
-SET userPoint = userPoint + (SELECT pointScore FROM pointdef where pointWhy = '글작성')
-WHERE userId = 'imfirst';
+UPDATE board
+SET refOrder = refOrder + 1
+WHERE ref=22;
+select * from board order by boardno desc;
+insert into board(title, content, writer, postDate, readCount, ref, step, refOrder)
+values('답글1', '답글내용', 'imsecond', now(), 1, 0, 22, 1);
 insert into boardupfiles(boardNo, originFileName)
 values(1, '몰라.png');
 commit;
@@ -106,3 +109,21 @@ SELECT IFNULL(datediff(now(), (
     FROM boardreadlog 
     WHERE readwho = '127.0.0.1'
     AND boardNo = 21)), -1);
+    
+    SELECT COUNT(*)
+		FROM board
+		WHERE ref = 22;
+         SET foreign_key_checks = 1;
+select * from board order byboardupfiles boardno desc;
+delete from board where boardNo = 25;
+select * from board 
+order by ref desc, reforder;
+
+alter table board add column isDelete varchar(20);
+SELECT boardNo,
+CASE
+WHEN isDelete LIKE 'Y' THEN '삭제된 게시글입니다.'
+ELSE title
+END as title, content, writer, postDate, readCount, ref, step, refOrder, isDelete
+FROM board
+ORDER BY ref desc, refOrder

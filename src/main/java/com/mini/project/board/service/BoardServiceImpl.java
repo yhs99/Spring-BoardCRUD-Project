@@ -40,6 +40,7 @@ public class BoardServiceImpl implements BoardService{
 	public boolean saveBoard(BoardDTO subject) throws Exception {
 		PointLogDTO pointData = PointLogDTO.builder().pointWho(subject.getWriter()).pointWhy("글작성").build();
 		int result = dao.insertBoard(subject);
+		dao.updateBoardRef();
 		int r2 = point_dao.updateMemberPoint(pointData);
 		int r3 = point_dao.insertPointLog(pointData);
 		if(result > 0 && r2 > 0 && r3 > 0)
@@ -64,10 +65,46 @@ public class BoardServiceImpl implements BoardService{
 		}
 		return dao.selectBoard(id);
 	}
+	
+	@Override
+	public BoardVO getBoardByBoardNo(int id) throws Exception {
+		return dao.selectBoard(id);
+	}
 
 	@Override
 	public List<BoardUpFilesVODTO> getBoardUpFiles(int id) throws Exception {
 		return dao.selectBoardUpFiles(id);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public boolean addReply(BoardDTO reply) {
+		// 1. 부모글의 첫번째 답글인지 확인한다.
+		// ref = 부모ref and 부모refOrder < reply.refOrder
+		// 2-1. 1번 해당 row가 없다면
+		// 이 글은 ref = 부모ref, step = 부모step+1, refOrder = 부모refOrder+1로 등록한다.
+		dao.updateBoardsRefOrder(reply.getRef(), reply.getRefOrder());
+		// 2-2. 2번 row가 있다면
+		// 해당 row를 refOrder에 +1을 더하고
+		// 새로 등록하는 답글은 ref = 부모ref, step = 부모step+1, refOrder = 부모refOrder+1로 등록한다.
+		reply.setRefOrder(reply.getRefOrder()+1);
+		reply.setStep(reply.getStep()+1);
+		dao.addReply(reply);
+
+		return true;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteBoard(int id) {
+		dao.deleteIsDelete(id);
+		dao.deleteUpFiles(id);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public boolean modifyBoard(BoardDTO board) throws Exception {
+		return false;
 	}
 	
 }

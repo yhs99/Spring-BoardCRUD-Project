@@ -2,15 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mini.mappers.boardMapper">
 	<select id="selectAllBoardLists" resultType="com.mini.project.board.domain.BoardVO">
-		SELECT *
+		SELECT boardNo,
+		CASE
+			WHEN isDelete LIKE 'Y' THEN '삭제된 게시글입니다.'
+			ELSE title
+		END as title, content, writer, postDate, readCount, ref, step, refOrder, isDelete
 		FROM board
-		ORDER BY boardNo DESC
+		ORDER BY ref desc, refOrder
 	</select>
 	
 	<insert id="saveNewBoard">
 		INSERT INTO board(title, content, writer)
 		VALUES(#{title}, #{content}, #{writer})
 	</insert>
+	
+	<update id="updateBoardRef">
+		UPDATE board
+		JOIN (
+		    SELECT MAX(boardNo) as maxBoardNo, MAX(boardNo) as maxRef
+		    FROM board
+		) as subquery
+		ON board.boardNo = subquery.maxBoardNo
+		SET board.ref = subquery.maxRef;
+	</update>
 	
 	<select id="selectBoardByBoardId" resultType="com.mini.project.board.domain.BoardVO">
 		SELECT *
@@ -77,4 +91,37 @@
 		WHERE boardNo = #{id}
 		AND readWho = #{ip}
 	</update>
+	
+	<select id="cntReplys" resultType="int">
+	<![CDATA[
+		SELECT COUNT(*)
+		FROM board
+		WHERE ref=#{ref}
+		AND refOrder<#{refOrder}
+	]]>
+	</select>
+	
+	<update id="updateBoardRefOrders">
+		UPDATE board
+		SET refOrder = refOrder+1
+		WHERE ref = #{ref}
+		AND refOrder > #{refOrder}
+	</update>
+	
+	<insert id="insertReply">
+		INSERT INTO board(title, content, writer, ref, step, refOrder)
+		VALUES(#{title}, #{content}, #{writer}, #{ref}, #{step}, #{refOrder})
+	</insert>
+	
+	<update id="updateIsDelete">
+		UPDATE board
+		SET isDelete = 'Y',
+		title = '',
+		content = ''
+		WHERE boardNo = #{id}
+	</update>
+	<delete id="deleteUpFiles">
+		DELETE FROM boardupfiles
+		WHERE boardNo = #{id}
+	</delete>
 </mapper>

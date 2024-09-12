@@ -24,6 +24,7 @@ public class BoardVO {
 	private int ref;
 	private int step;
 	private int refOrder;
+	private char isDelete;
 	
 	private List<BoardUpFilesVODTO> fileList;
 	

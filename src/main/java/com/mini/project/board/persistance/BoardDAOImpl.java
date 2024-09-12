@@ -1,5 +1,6 @@
 package com.mini.project.board.persistance;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,4 +60,38 @@ public class BoardDAOImpl implements BoardDAO{
 	public int insertBoardReadLog(Map<String, Object> data) throws Exception {
 		return session.insert(NS+"insertBoardReadLog", data);
 	}
+
+	@Override
+	public int checkReplyCnt(BoardDTO reply) {
+		return session.selectOne(NS+"cntReplys", reply);
+	}
+
+	@Override
+	public int updateBoardsRefOrder(int ref, int refOrder) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("ref", ref);
+		map.put("refOrder", refOrder);
+		return session.update(NS+"updateBoardRefOrders", map);
+	}
+
+	@Override
+	public int addReply(BoardDTO reply) {
+		return session.insert(NS+"insertReply", reply);
+	}
+
+	@Override
+	public int updateBoardRef() {
+		return session.update(NS+"updateBoardRef");
+	}
+
+	@Override
+	public int deleteIsDelete(int id) {
+		return session.update(NS+"updateIsDelete", id);
+	}
+
+	@Override
+	public int deleteUpFiles(int id) {
+		return session.delete(NS+"deleteUpFiles", id);
+	}
+	
 }
