@@ -22,6 +22,7 @@ import com.mini.project.board.service.BoardService;
 import com.mini.project.infra.ApiResponse;
 import com.mini.project.infra.ApiResponseUtil;
 import com.mini.project.infra.FileProcess;
+import com.mini.project.member.domain.PagingDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,10 +39,12 @@ public class BoardController<T> {
 	 * @return ResponseEntity<ApiResponse<List<BoardVO>>>
 	 */
 	@GetMapping("board")
-	public ResponseEntity<ApiResponse<?>> boardList(){
+	public ResponseEntity<ApiResponse<?>> boardList(@RequestParam(value="pageNo", defaultValue = "1") int pageNo){
+		PagingDTO dto = PagingDTO.builder().pageNo(pageNo).pagingSize(10).build();
+		
 		log.info("boardList call");
 		try {
-			return ResponseEntity.ok().body(ApiResponseUtil.success(service.getAllBoards()));
+			return ResponseEntity.ok().body(ApiResponseUtil.success(service.getAllBoards(dto)));
 		}catch(Exception e) {
 			return ResponseEntity.badRequest().body(ApiResponseUtil.error("문제가 발생해 데이터를 불러오지 못했습니다."));
 		}

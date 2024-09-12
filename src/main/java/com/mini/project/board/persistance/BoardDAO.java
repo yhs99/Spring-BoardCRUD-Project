@@ -7,8 +7,10 @@ import com.mini.project.board.domain.BoardDTO;
 import com.mini.project.board.domain.BoardReadLog;
 import com.mini.project.board.domain.BoardUpFilesVODTO;
 import com.mini.project.board.domain.BoardVO;
+import com.mini.project.board.domain.PagingInfo;
 
 public interface BoardDAO {
+	int getPostTotalCnt() throws Exception;
 	List<BoardVO> selectAllBoards() throws Exception;
 	int insertBoard(BoardDTO subject) throws Exception;
 	BoardVO selectBoard(int id) throws Exception;
@@ -23,4 +25,5 @@ public interface BoardDAO {
 	int updateBoardRef();
 	int deleteIsDelete(int id);
 	int deleteUpFiles(int id);
+	List<BoardVO> selectAllBoards(PagingInfo info);
 }

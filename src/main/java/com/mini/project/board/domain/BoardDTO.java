@@ -20,4 +20,5 @@ public class BoardDTO {
 	private int ref;
 	private int step;
 	private int refOrder;
+	private int readCount;
 }

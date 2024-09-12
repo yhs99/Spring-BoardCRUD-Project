@@ -2,6 +2,7 @@ package com.mini.project.view.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -23,10 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.mini.project.board.domain.BoardDTO;
 import com.mini.project.board.domain.BoardUpFilesVODTO;
+import com.mini.project.board.domain.PagingInfo;
 import com.mini.project.board.service.BoardService;
-import com.mini.project.infra.ApiResponse;
 import com.mini.project.infra.ApiResponseUtil;
 import com.mini.project.infra.GetClientIPAddr;
+import com.mini.project.member.domain.PagingDTO;
 
 @Controller
 public class ViewController {
@@ -45,8 +47,21 @@ public class ViewController {
 	}
 	
 	@GetMapping("board")
-	public String boardLists() {
-		logger.info("boardLists Controller call");
+	public String boardLists(@RequestParam(value="pageNo", defaultValue="1") int pageNo,
+							 @RequestParam(value="pagingSize", defaultValue = "10") int pagingSize, 
+							Model model) {
+		try {
+			PagingDTO dto = PagingDTO.builder().pageNo(pageNo).pagingSize(pagingSize).build();
+			Map<String, Object> result;
+			result = service.getAllBoards(dto);
+			
+			PagingInfo pi = (PagingInfo) result.get("pagingInfo");
+			model.addAttribute("boardList", result.get("boardList"));
+			model.addAttribute("pagingInfo", pi);
+			model.addAttribute("pagingSize", pagingSize);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "board/board";
 	}
 	

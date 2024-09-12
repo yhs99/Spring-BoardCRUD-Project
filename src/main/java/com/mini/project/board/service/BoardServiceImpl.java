@@ -15,7 +15,9 @@ import com.mini.project.board.domain.BoardDTO;
 import com.mini.project.board.domain.BoardReadLog;
 import com.mini.project.board.domain.BoardUpFilesVODTO;
 import com.mini.project.board.domain.BoardVO;
+import com.mini.project.board.domain.PagingInfo;
 import com.mini.project.board.persistance.BoardDAO;
+import com.mini.project.member.domain.PagingDTO;
 import com.mini.project.member.domain.PointLogDTO;
 import com.mini.project.point.persistance.PointLogDAO;
 
@@ -106,5 +108,23 @@ public class BoardServiceImpl implements BoardService{
 	public boolean modifyBoard(BoardDTO board) throws Exception {
 		return false;
 	}
+
+	@Override
+	public Map<String, Object> getAllBoards(PagingDTO dto) throws Exception {
+		PagingInfo info = new PagingInfo(dto);
+		makePagingInfo(info);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardList", dao.selectAllBoards(info));
+		map.put("pagingInfo", info);
+		return map;
+	}
 	
+	public void makePagingInfo(PagingInfo info) throws Exception {
+		info.setTotalPostCnt(dao.getPostTotalCnt());
+		info.setTotalPageCnt();
+		info.setStartRowIndex();
+		info.setPageBlockNoCurPage();
+		info.setStartPageNoCurBlock();
+		info.setEndPageNoCurBlock();
+	}
 }

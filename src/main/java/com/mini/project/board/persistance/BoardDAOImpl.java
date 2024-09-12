@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.mini.project.board.domain.BoardDTO;
 import com.mini.project.board.domain.BoardUpFilesVODTO;
 import com.mini.project.board.domain.BoardVO;
+import com.mini.project.board.domain.PagingInfo;
 
 @Repository
 public class BoardDAOImpl implements BoardDAO{
@@ -92,6 +93,16 @@ public class BoardDAOImpl implements BoardDAO{
 	@Override
 	public int deleteUpFiles(int id) {
 		return session.delete(NS+"deleteUpFiles", id);
+	}
+
+	@Override
+	public int getPostTotalCnt() throws Exception {
+		return session.selectOne(NS+"getPostCnt");
+	}
+
+	@Override
+	public List<BoardVO> selectAllBoards(PagingInfo info) {
+		return session.selectList(NS+"selectAllBoardByLimit", info);
 	}
 	
 }
