@@ -181,7 +181,7 @@
 		
 		      <!-- Modal Header -->
 		      <div class="modal-header">
-		        <h4 class="modal-title">심각 ! 심각 ! 람각 !</h4>
+		        <h4 class="modal-title">오류발생</h4>
 		        <button type="button" class="btn-close modalCloseBtn" data-bs-dismiss="modal"></button>
 		      </div>
 		

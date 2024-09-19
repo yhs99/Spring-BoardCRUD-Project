@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("api")
+@RequestMapping("member")
 public class MemberController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MemberController.class);
 	
-	@GetMapping("member")
-	public String mainPage() {
-		logger.info("mainController 호출");
-		return "home";
+	@GetMapping("")
+	public String member() {
+		logger.info("MemberController 호출");
+		return "member/registerForm";
 	}
 }
